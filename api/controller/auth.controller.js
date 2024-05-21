@@ -27,7 +27,8 @@ export const signin=async (req,res,next)=>{
             if(!validUser){
                   return next(errorHandler(404,"User not found !"));
             }
-
+            
+            //compareSync can synchonously check the password with hash password:-->compare the hashed password with the plain text password
             const validpassword=bcryptjs.compareSync(password,validUser.password);
             if(!validpassword){
                   return next(errorHandler(401,"Wrong Credentials !"));
@@ -43,7 +44,7 @@ export const signin=async (req,res,next)=>{
             //now sending the cookie to the server for validate token
             res.cookie("access_token",token,{httpOnly:true})
             .json(rest)
-            .status(200)
+            .status(200);
 
       }
       catch(err){
