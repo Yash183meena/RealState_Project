@@ -1,5 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
+import ListingItem from '../components/ListingItem';
+
 const Search = () => {
       const navigate=useNavigate();
       const [sidebardata,setSidebardata]=useState({
@@ -49,7 +51,7 @@ const Search = () => {
         
             const fetchListings = async () => {
               setLoading(true);
-              //setShowMore(false);
+              
               const searchQuery = urlParams.toString();
               const res = await fetch(`/api/listing/get?${searchQuery}`);
               const data = await res.json();
@@ -104,7 +106,7 @@ const Search = () => {
       }
 
   return (
-    <div className='grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-5'> 
+    <div className='flex flex-col md:flex-row'> 
        <div className='p-7 border-b-2 md:border-r-4 md:min-h-screen'>
             <form className='flex flex-col gap-8' onSubmit={handleSubmit}> 
                   <div className='flex items-center gap-2'>
@@ -196,8 +198,28 @@ const Search = () => {
             </form>
        </div>
 
-       <div className=''>
-           <h1 className='text-3xl font-semibold border border-b-4 p-3 text-slate-700 mt-5'>Listing results:</h1>
+       <div className='flex-1'>
+
+           <h1 className='text-3xl font-semibold border-b-4 p-3 border-gray-400 text-slate-700 mt-5'>Listing results:</h1>
+
+           <div className='p-7 flex flex-wrap gap-4'>
+
+               {!loading && listings.length===0 && (
+                  <p className='text-xl text-slate-700'>No listing found!</p>
+               )}
+
+               {loading && (
+                  <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
+               )}
+               
+               {
+                  !loading &&
+                  listings &&
+                  listings.map((listing)=>(
+                     <ListingItem key={listing._id} listing={listing}/>
+                  ))
+               }
+           </div>
        </div>
     </div>
   )
