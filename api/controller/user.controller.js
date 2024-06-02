@@ -18,7 +18,7 @@ export const updateUser=async(req,res,next)=>{
            }
 
            const updatedUser=await User.findByIdAndUpdate(req.params.id,{
-             //set function can check which field is updated and update only in the fied in which updated is done and all other non updated field remais same
+             //set function(it is not a function operator) can check which field is updated and update only in the fied in which updated is done and all other non updated field remais same
              $set:{
                   username:req.body.username,
                   email:req.body.email,

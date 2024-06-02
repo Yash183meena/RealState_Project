@@ -16,7 +16,7 @@ export default function Header() {
     //this is the in build javascript constructor for appending params in the url
     const urlParams=new URLSearchParams(window.location.search);
     urlParams.set('searchTerm',searchTerm);
-
+    //urlParams.set('limit',6); 
     const searchQuery=urlParams.toString();
     navigate(`/search?${searchQuery}`)
   }

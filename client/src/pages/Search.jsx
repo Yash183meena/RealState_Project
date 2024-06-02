@@ -5,7 +5,7 @@ import ListingItem from '../components/ListingItem';
 const Search = () => {
       const navigate=useNavigate();
       const [sidebardata,setSidebardata]=useState({
-
+      
             searchTerm:'',
             type:'all',
             parking:false,
@@ -17,7 +17,7 @@ const Search = () => {
 
       const [loading,setLoading]=useState(false);
       const [listings,setListings]=useState([]);
-      console.log(listings);
+      const [showMore,setShowMore]=useState(false);
 
        useEffect(() => {
             const urlParams = new URLSearchParams(location.search);
@@ -46,6 +46,7 @@ const Search = () => {
                 offer: offerFromUrl === 'true' ? true : false,
                 sort: sortFromUrl || 'created_at',
                 order: orderFromUrl || 'desc',
+      
               });
             }
         
@@ -55,7 +56,12 @@ const Search = () => {
               const searchQuery = urlParams.toString();
               const res = await fetch(`/api/listing/get?${searchQuery}`);
               const data = await res.json();
-             
+              console.log(data.length)
+              if (data.length > 5) {
+                  setShowMore(true);
+               } else {
+                  setShowMore(false);
+                }
               setListings(data);
               setLoading(false);
             };
@@ -84,7 +90,7 @@ const Search = () => {
 
                   const sort=e.target.value.split('_')[0] || 'created_at';
                   const order=e.target.value.split('_')[1] || 'desc';
-
+                                                                              
                   setSidebardata({...sidebardata,sort,order});
             }
       };
@@ -101,9 +107,27 @@ const Search = () => {
           urlParams.set('offer',sidebardata.offer);
           urlParams.set('sort',sidebardata.sort);
           urlParams.set('order',sidebardata.order);
+         // urlParams.set('limit',6);
           const searchQuery=urlParams.toString();
           navigate(`/search?${searchQuery}`);
       }
+
+      const onShowMoreClick = async () => {
+
+            const numberOfListings = listings.length;
+            const startIndex = numberOfListings;
+            const urlParams = new URLSearchParams(location.search);
+            urlParams.set('startIndex', startIndex);
+            const searchQuery = urlParams.toString();
+            const res = await fetch(`/api/listing/get?${searchQuery}`);
+            const data = await res.json();
+
+            if (data.length < 7) {
+              setShowMore(false);
+            }
+
+            setListings([...listings, ...data]);
+          };
 
   return (
     <div className='flex flex-col md:flex-row'> 
@@ -219,6 +243,16 @@ const Search = () => {
                      <ListingItem key={listing._id} listing={listing}/>
                   ))
                }
+
+            {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className='text-green-700 hover:underline p-7 text-center w-full'
+            >
+              Show more
+            </button>
+          )}
+
            </div>
        </div>
     </div>
