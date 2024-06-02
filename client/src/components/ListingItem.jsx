@@ -69,7 +69,7 @@ export default function ListingItem({listing}) {
              {listing.bedrooms>1? `${listing.bedrooms} beds` : `${listing.bedrooms} bed`}
          </div>
          <div className='font-bold text-xs'>
-             {listing.bathrooms>1? `${listing.bathrooms} beds` : `${listing.bathrooms} bed`}
+             {listing.bathrooms>1? `${listing.bathrooms} beds` : `${listing.bedrooms} bed`}
          </div>
       </div>
     </div>
